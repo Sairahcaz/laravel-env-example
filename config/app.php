@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Facade;
 
 return [
 
+    'foo' => env('FOO', 'bar'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
