@@ -1,0 +1,27 @@
+#!/bin/bash
+
+SAIL=vendor/bin/sail
+EXECUTOR=$SAIL
+
+SAILCHECK=$($SAIL php -v 2>&1 >/dev/null)
+
+if [[ $SAILCHECK == *"Sail is not running."* ]] || [[ $SAILCHECK == *"Docker is not running."* ]]; then
+    EXECUTOR=php
+fi
+
+#xargs to remove whitespace
+CHECK=$($EXECUTOR artisan envy:sync --dry | xargs)
+
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+if [ "$CHECK" != "There are no variables to sync!" ]
+then
+    printf "${RED}Some env variables are missing, please add them to the specified file before you go on:\n"
+    printf "$CHECK\n${NC}"
+    # exit 1 cancels the commit...
+	exit 1
+fi
+
+# exit 0 continues the commit...
+exit 0
